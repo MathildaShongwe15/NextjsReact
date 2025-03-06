@@ -1,101 +1,129 @@
-import Image from "next/image";
+"use client";
+import { gsap } from "gsap";
+import { useEffect, useRef } from "react";
+import ScrollTrigger from 'gsap/ScrollTrigger';
+import text from "gsap/TextPlugin";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const mainHeadingRef = useRef(null);
+  const mainContainerRef = useRef(null);
+  const infoContainerRef = useRef(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  gsap.registerPlugin(text, ScrollTrigger);
+
+  useEffect(() => {
+
+    let elements = document.querySelector(".scroll-section");
+    const words = ["travel", "card", "expense", "smart", "easy"];
+    var timelines = gsap.timeline();
+
+    words.forEach((word) => {
+      timelines.to(mainHeadingRef.current, {
+        scale: 5,
+        autoAlpha: 1,
+        duration: 3,
+        ease: "expo.in",
+        text: {
+          value: word,
+          delimiter: " "
+        },
+      })
+        .to(mainHeadingRef.current, {
+          ease: "expo.out",
+          scale: 5,
+          delay: 0.5,
+          text: {
+            value: word,
+            delimiter: " "
+          },
+        })
+        .to(mainHeadingRef.current, {
+          ease: "expo.out",
+          scale: 7,
+          autoAlpha: 0,
+          text: {
+            value: word,
+            delimiter: " "
+          },
+        })
+        .to(mainHeadingRef.current, {
+          duration: 0,
+          autoAlpha: 1,
+          scale: 0,
+          text: {
+            value: " ",
+            delimiter: " "
+          },
+        })
+    });
+
+    timelines.to(mainContainerRef.current, {
+      width: "20vw",
+      height: "70vh",
+      duration: 1,
+      y: 100,
+      x: 1000,
+      ease: "power4.inOut"
+    });
+
+    gsap.utils.toArray('.panel').forEach((panel:any, index, panels) =>{
+      let nextPanel:any = panels[index+1] || panels[0];
+      const lastpanel = index === panels.length - 1; //9-1 8
+
+     const timelines = gsap.timeline({
+       
+        scrollTrigger:{
+        trigger:panel,
+        pin:true,
+        start:'top top',
+        end:`+=${window.innerWidth}`,
+        markers:true,
+        scrub:1,
+        toggleClass:{targets:panel, className:"relativeStyle"}
+       }
+      })
+
+      timelines.to(panels,{
+        x: (i:any) => i == index ? -120 * index : 0,
+        ease: 'none',
+        markers: true,
+      })
+
+      if(nextPanel){
+        timelines.add(()=>{
+          gsap.to(nextPanel,{
+            x:-120 * (index + 1),
+            ease:'none'
+          });
+        },`+=${window.innerWidth}`);
+      }
+     });
+      
+    
+
+
+  }, []);
+
+  return (
+    <div className="w-screen h-auto overflow-x-hidden">
+      <div  id="top-content" className="w-screen h-auto bg-white border-red-600 border-3 p-3 font-sans sticky top-0">
+        <div className="z-0 w-180 mt-80 mr-100">
+          <p className="flex items-start text-black text-2xl">ITS makes it easier than ever for businesses to book travel, control savings, reconcile charges and automate the expense process - all within a single, unified expereince.</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div ref={mainContainerRef} className="justify-items-center align-items-center w-7xl h-170 -mt-100 border-1 bg-black rounded-3xl font-sans z-4 ">
+          <h1 ref={mainHeadingRef} id="text-selected" className=" text-4xl m-70"></h1>
+        </div>
+      </div>
+     
+      <div  id="panel-content" className="w-screen h-auto bg-white border-red-600 border-3 p-3 grid grid-flow-col grid-rows-1 font-sans sticky top-0">
+         <div id="" className="panel w-70 h-100 bg-black rounded-3xl col-span-1 "></div>
+         <div id="" className="panel w-70 h-100 bg-black rounded-3xl col-span-1 "></div>
+         <div id="" className="panel w-70 h-100 bg-black rounded-3xl col-span-1 "></div>
+         <div id="" className="panel w-70 h-100 bg-black rounded-3xl col-span-1 "></div>  
+      </div>
+
     </div>
   );
 }
+
+
