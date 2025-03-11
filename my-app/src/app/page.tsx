@@ -3,7 +3,9 @@ import { gsap } from "gsap";
 import { Component, useEffect, useRef } from "react";
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import text from "gsap/TextPlugin";
+
 import { useRouter } from "next/router";
+
 
 export default function Home() {
   const mainHeadingRef = useRef(null);
@@ -47,6 +49,7 @@ export default function Home() {
             delimiter: " "
           },
         })
+        
         .to(mainHeadingRef.current, {
           duration: 0,
           autoAlpha: 1,
@@ -55,67 +58,76 @@ export default function Home() {
             value: " ",
             delimiter: " "
           },
+
         })
     });
 
-    timelines.to(mainContainerRef.current, {
-      width: "20vw",
-      height: "70vh",
-      duration: 1,
-      y: 100,
-      x: 1000,
-      ease: "power4.inOut"
-    });
+    const mainPanel:any = document.querySelector(".main-container")
+    timelines.to(mainPanel,{
+      y: 50,
+      x: 1100,
+    
+      ease: "power4.inOut",
+      onComplete: () => {
+      mainPanel.classList.toggle("adjustSize");
+      }
+    })
+    // timelines.to(mainContainerRef.current, {
+    //   width: "20vw",
+    //   height: "70vh",
+    //   duration: 1,
+    //   y: 100,
+    //   x: 1000,
+    //   ease: "power4.inOut"
+    // });
 
-   const timeliness =  gsap.timeline({
-              width: "20vw",
-              height: "70vh",
-              scrollTrigger:{
-              trigger:mainContainerRef.current,
-              pin:true,
-              start:'top top',
-              end:"+=1000 bottom",
-              markers:true,
-              scrub:1,
-             }
-            });
-
-            timeliness.to('.panel',{
-             opacity:1,
-           });
+   
 
     let allPanels = gsap.utils.toArray('.panel');
+    var timeline2 = gsap.timeline();
 
-
-    const tl = gsap.timeline({
+    timelines.to(mainContainerRef.current,{
       scrollTrigger:{
+      trigger:mainContainerRef.current,
+      start:'top top',
+      markers:true,
+      scrub:true
+     },
+     y:900
+    });
+
+    const tl =gsap.timeline({
+      scrollTrigger:{ 
+      preventOverlaps:true,
       trigger:'.panel',
       pin:true,
       pinSpacing:true,
-      start:'left left',
+      start:'top top',
       end:"max",
       markers:true,
-      scrub:1,
+      scrub:4,
+      anticipatePin:1
      }
     });
-
-
-    allPanels.forEach((panel:any, index, panels) =>{
-
-      tl.from(panel,{
-            x: -180 * window.innerWidth,
-            ease: "none",
-            markers: true,
-          });
+  
+    allPanels.forEach((panel:any, index, panels) =>{  
+     
+      tl.to(panel,{
+        opacity:1,
+        x: window.innerWidth,
+        markers: true,
+        ease:"none",
+        duration:2.5,
+        stagger:0.1,
+      })
       }
-  );
+ );
   
   // const panels = document.querySelectorAll(".panel");
   // panels.forEach((panel, index) =>{
   // let arr = gsap.utils.toArray('.panel');
   // let width_tl:any = gsap.timeline();
   // let move_tl:any = gsap.timeline();
-
 
 
   //   panel.addEventListener("mouseenter",function(){
@@ -128,7 +140,7 @@ export default function Home() {
   //       width:panel.clientWidth,
   //     },
   //     {
-  //     width:maxExpansion,
+  //     width:panelWidth * 2,
   //     duration:0.5
   //     }, "start");
   //   })
@@ -142,7 +154,7 @@ export default function Home() {
 
   //   if(index < arr.length -1){
   //      move_tl.fromTo(arr.slice(index + 1), {
-  //       xPercent:0,
+  //       xPercent:5,
   //      },
   //      {
   //       xPercent:10,
@@ -160,20 +172,20 @@ export default function Home() {
 
   return (
     <div className="w-screen h-auto overflow-x-hidden">
-      <div  id="top-content" className="w-screen h-auto bg-white  p-3 font-sans sticky top-0">
+      <div  id="top-content" className="w-screen h-auto bg-white border-13 border-red-600 p-3 font-sans top-0 z-0">
         <div className="z-0 w-180 mt-80 mr-100">
           <p className="flex items-start text-black text-2xl">ITS makes it easier than ever for businesses to book travel, control savings, reconcile charges and automate the expense process - all within a single, unified expereince.</p>
         </div>
-        <div ref={mainContainerRef} className="justify-items-center align-items-center w-7xl h-170 -mt-100  mb-50 border-1 bg-black rounded-3xl font-sans z-4 ">
+        <div ref={mainContainerRef} className="main-container justify-items-center align-items-center w-8xl h-170 -mt-100  border-1 bg-black rounded-3xl font-sans z-4 ">
           <h1 ref={mainHeadingRef} id="text-selected" className=" text-4xl m-70"></h1>
         </div>
       </div>
      
-      <div  id="panel-content" className="w-screen h-auto bg-white grid grid-flow-col grid-rows-1 gap-x-4 font-sans sticky top-0 ">
-         <div id="" className="panel w-70 h-120 bg-black rounded-3xl col-span-2 sticky ml-3 mt-10"></div>
-         <div id="" className="panel w-70 h-120 bg-black rounded-3xl col-span-2 sticky ml-3 mt-50"></div>
-         <div id="" className="panel w-70 h-120 bg-black rounded-3xl col-span-1 sticky  ml-3 mt-50"></div>
-         <div id="" className="panel w-70 h-120 bg-black rounded-3xl col-span-1 sticky  ml-3 mt-50"></div>  
+      <div  id="panel-content" className="w-screen h-auto bg-white flex space-x-2 p-10  border-1 border-red-600 font-sans z-0">
+         <div id="" className="panel w-60 h-120 bg-black rounded-3xl sticky "></div>
+         <div id="" className="panel w-60 h-120 bg-black rounded-3xl sticky"></div>
+         <div id="" className="panel w-60 h-120 bg-black rounded-3xl sticky"></div>
+         <div id="" className="panel w-60 h-120 bg-black rounded-3xl sticky "></div>  
       </div>
 
     </div>
