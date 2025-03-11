@@ -64,7 +64,7 @@ export default function Home() {
 
     const mainPanel:any = document.querySelector(".main-container")
     timelines.to(mainPanel,{
-      y: 50,
+      y: 200,
       x: 1100,
     
       ease: "power4.inOut",
@@ -93,7 +93,7 @@ export default function Home() {
       markers:true,
       scrub:true
      },
-     y:900
+     y:800
     });
 
     const tl =gsap.timeline({
@@ -103,7 +103,7 @@ export default function Home() {
       pin:true,
       pinSpacing:true,
       start:'top top',
-      end:"max",
+      end:"+=900",
       markers:true,
       scrub:4,
       anticipatePin:1
@@ -111,7 +111,9 @@ export default function Home() {
     });
   
     allPanels.forEach((panel:any, index, panels) =>{  
-     
+      tl.from(panel,{
+        x:335,
+      })
       tl.to(panel,{
         opacity:1,
         x: window.innerWidth,
@@ -172,7 +174,7 @@ export default function Home() {
 
   return (
     <div className="w-screen h-auto overflow-x-hidden">
-      <div  id="top-content" className="w-screen h-auto bg-white border-13 border-red-600 p-3 font-sans top-0 z-0">
+      <div  id="top-content" className="w-screen h-200 bg-white border-13 border-red-600 p-3 font-sans top-0 z-0">
         <div className="z-0 w-180 mt-80 mr-100">
           <p className="flex items-start text-black text-2xl">ITS makes it easier than ever for businesses to book travel, control savings, reconcile charges and automate the expense process - all within a single, unified expereince.</p>
         </div>
@@ -182,10 +184,10 @@ export default function Home() {
       </div>
      
       <div  id="panel-content" className="w-screen h-auto bg-white flex space-x-2 p-10  border-1 border-red-600 font-sans z-0">
-         <div id="" className="panel w-60 h-120 bg-black rounded-3xl sticky "></div>
-         <div id="" className="panel w-60 h-120 bg-black rounded-3xl sticky"></div>
-         <div id="" className="panel w-60 h-120 bg-black rounded-3xl sticky"></div>
-         <div id="" className="panel w-60 h-120 bg-black rounded-3xl sticky "></div>  
+         <div id="" className="panel w-60 h-120 bg-black rounded-3xl sticky  z-0"></div>
+         <div id="" className="panel w-60 h-120 bg-black rounded-3xl sticky z-0"></div>
+         <div id="" className="panel w-60 h-120 bg-black rounded-3xl sticky z-0"></div>
+         <div id="" className="panel w-60 h-120 bg-black rounded-3xl sticky z-0"></div>  
       </div>
 
     </div>
